@@ -15,12 +15,12 @@ def load_data():
 
 def evaluate_model(model, x_test, y_test):
     """Run full evaluation on test set"""
-    # Basic evaluation
+    #nasic evaluation
     start_time = time.time()
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
     inference_time = time.time() - start_time
     
-    # Detailed predictions
+    #detailed predictions
     predictions = model.predict(x_test, verbose=0)
     predicted_classes = np.argmax(predictions, axis=1)
     
@@ -35,7 +35,7 @@ def evaluate_model(model, x_test, y_test):
 
 def save_misclassified_examples(x_test, y_test, predictions, indices, num_examples=10):
     """Save sample misclassified images"""
-    predicted_classes = np.argmax(predictions, axis=1)  # Calculate here
+    predicted_classes = np.argmax(predictions, axis=1)
     
     plt.figure(figsize=(20, 4))
     for i, idx in enumerate(indices[:num_examples]):
@@ -47,12 +47,11 @@ def save_misclassified_examples(x_test, y_test, predictions, indices, num_exampl
     plt.close()
 
 def main():
-    # Load model and data
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     model_path = os.path.join(
-    current_dir,  # model_training/
-    "..",         # go up to neural_network/
+    current_dir, 
+    "..",      
     "backend", 
     "model", 
     "digit_classifier.keras") 
@@ -60,17 +59,16 @@ def main():
     model = tf.keras.models.load_model(model_path)
     x_test, y_test = load_data()
     
-    # Run evaluation
     results = evaluate_model(model, x_test, y_test)
     
-    # Print results
+    #print results
     print(f"Test Accuracy: {results['accuracy']:.4f}")
     print(f"Test Loss: {results['loss']:.4f}")
     print(f"Inference Time for 10,000 images: {results['inference_time']:.2f}s")
     print("\nClassification Report:")
     print(results['report'])
     
-    # Plot confusion matrix
+    #plot confusion matrix
     plt.figure(figsize=(10, 8))
     sns.heatmap(results['confusion_matrix'], annot=True, fmt='d', cmap='Blues')
     plt.xlabel('Predicted')
@@ -78,12 +76,11 @@ def main():
     plt.savefig('confusion_matrix.png')
     plt.close()
     
-    # Save misclassified examples
+    #save misclassified examples
     if len(results['misclassified']) > 0:
         predictions = model.predict(x_test, verbose=0)
         predicted_classes = np.argmax(predictions, axis=1)
 
-        # Pass the raw predictions array, not the argmax results
         save_misclassified_examples(x_test, y_test, predictions, results['misclassified'])
 
 if __name__ == '__main__':

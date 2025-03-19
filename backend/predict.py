@@ -7,10 +7,10 @@ def preprocess_image(file_stream, invert=True):
     img = Image.open(file_stream).convert('L').resize((28, 28))
     img_array = np.array(img)
     
-    if invert:  # Only invert web inputs, not test data
-        img_array = 255.0 - img_array  # Invert colors
+    if invert:
+        img_array = 255.0 - img_array
     
-    img_array = img_array / 255.0  # Normalize to [0,1]
+    img_array = img_array / 255.0
     return img_array.reshape(1, 28, 28, 1)
 
 def predict_digit(image_file, model):
